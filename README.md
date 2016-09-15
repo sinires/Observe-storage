@@ -1,5 +1,5 @@
 # Observe-storage
-Хранилище объектов с функционалом асинхронного обзора изменений хранимого объекта.
+The object storage with asynchronous observing the stored object changes.
 
 ## Install
 ```HTML
@@ -7,34 +7,34 @@
 ```
 ## Usage
 
-#### Добавление объекта в хранилище
+#### Adding object to the storage
 ```Javascript
     let wrapper = ObserveStorage.add(key, object); //return Proxy
 //or
     let wrapper = ObserveStorage.add(object); //return Proxy
 ```
     
-#### Получение объекта из хранилища
+#### Extract object from the storage
 ```Javascript
 let wrapper = ObserveStorage.get(key); //return Proxy
 ```
 
-#### Удаление объекта из хранилища
+#### Removing object from the storage
 ```Javascript
 ObserveStorage.remove(key); //return boolean
 ```
 
-#### Подписка на изменение объекта
-##### Подписка на все поля
+#### Subscribing to the object changes
+##### Subscribing to all the fields
 ```Javascript
   const subId = wrapper.on(callback); //return subscribe id
 ```
-##### Подписка на определенное поле 
+##### Subscribing to a specific field
 ```Javascript
   const subId = wrapper.on(callback, field); //return subscribe id
 ```
 
-#### Отписка от изменения объекта
+#### Unsubscribing from the object changes
 ```Javascript
   wrapper.un(subId); //return Proxy
 ```
