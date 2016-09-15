@@ -68,11 +68,10 @@ class OS {
                         return true;
                     },
                     ownKeys(target) {
-                        let props = Object.keys(target)
+                        return Object.keys(target)
                                         .filter(function (prop) {
                                             return !(self.serviceField.has(prop));
                                         });
-                        return props;
                     }
                 }
         );
@@ -98,9 +97,8 @@ class OS {
             throw new Error(`key ${key} is already in use`);
         }
 
-        let self = this;
-        object.on = (...arg)=> self.on(key, ...arg);
-        object.un = (...arg)=> self.un(key, ...arg);
+        object.on = (...arg)=> this.on(key, ...arg);
+        object.un = (...arg)=> this.un(key, ...arg);
         
         const proxy = this.getProxy(key, object);
         this.listeners.set(key, new Map());
@@ -156,6 +154,32 @@ class OS {
         listeners.has("*")      && this.fireListeners(event, listeners.get("*"));
     }
 
+
+    on(key, callback, property = "*") {
+        if (!key || !callback) {
+            throw new Error("Key or callback is empty or not exist");
+        }
+        const listeners      = this.listeners.get(key),
+            subscriptionId = OS.__getId();
+        !listeners.has(property) && listeners.set(property, new Map());
+        listeners
+            .get(property)
+            .set(subscriptionId, callback);
+        return subscriptionId;
+    }
+
+    un(key, subscriptionId) {
+        if (!key) {
+            throw new Error("Key is empty or not exist");
+        }
+        const listeners = this.listeners.get(key);
+        if (listeners)
+            for (let listener of listeners.values()) {
+                if (listener.delete(subscriptionId))
+                    return true;
+            }
+        return false;
+    }
 
 }
 
